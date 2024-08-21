@@ -26,7 +26,7 @@ const scenario = sequelize.define("scenario",{
     freezeTableName: true
 })
 
-scenario.belongsTo(history,{foreignKey:'historyId'});
-history.hasMany(scenario, {foreignKey: 'historyId',});
+scenario.belongsTo(history,{foreignKey:'storyId'});
+history.hasMany(scenario, {foreignKey: 'storyId',});
 module.exports = scenario;
 
