@@ -1,6 +1,6 @@
 const sequelize = require("../database/database.js")
 const {DataTypes} = require("sequelize")
-const history = require("./history")
+const story = require("./story")
 
 const scenario = sequelize.define("scenario",{
     id:{
@@ -26,7 +26,7 @@ const scenario = sequelize.define("scenario",{
     freezeTableName: true
 })
 
-scenario.belongsTo(history,{foreignKey:'storyId'});
-history.hasMany(scenario, {foreignKey: 'storyId',});
+scenario.belongsTo(story,{foreignKey:'storyId'});
+story.hasMany(scenario, {foreignKey: 'storyId',});
 module.exports = scenario;
 
