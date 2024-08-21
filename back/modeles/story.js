@@ -2,7 +2,7 @@ const sequelize = require("../database/database.js")
 const {DataTypes} = require("sequelize")
 
 
-const history = sequelize.define("history",{
+const story = sequelize.define("story",{
     id:{
         type:DataTypes.INTEGER,
         primaryKey:true,
@@ -19,5 +19,5 @@ const history = sequelize.define("history",{
 })
 
 
-module.exports = history;
+module.exports = story;
 
