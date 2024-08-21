@@ -47,7 +47,7 @@ exports.updateStory = async(req, res) => {
 
 exports.createStory = async(req, res) => {
     try {
-        await story.create( req.boy )
+        await story.create( req.body )
         res.status(200).json("story has been created")
     } catch(err) {
         res.status(500).json({ error: "Unable to connect to db"})
