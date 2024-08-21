@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const unicornController = require('../controllers/unicornController');
+const storyController = require('../controllers/storyController');
 
-router.get('/config', unicornController.createTableUnicorn);
+router.get('/story', storyController.getStory);
+router.get('/story/:id', storyController.getStoryById);
+router.patch('/story/:id', storyController.deleteStory);
+router.delete('/story/:id', storyController.updateStory);
 
 module.exports = router
