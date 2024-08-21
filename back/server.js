@@ -5,7 +5,6 @@ const unicornRoute = require('./routes/unicornRoute');
 const userRoute = require('./routes/userRoute')
 const scenarioRoute = require('./routes/scenarioRoute')
 const storyRoute = require('./routes/storyRoute')
-const scenarioRoute = require('./routes/scenarioRoute')
 const choiceRoute = require('./routes/choiceRoute')
 
 app.use(express.json());
