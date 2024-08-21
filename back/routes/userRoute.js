@@ -5,4 +5,5 @@ const userController = require('../controllers/userController')
 
 router.get('/config', userController.createTableUnicorn);
 
+
 module.exports = router
