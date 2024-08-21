@@ -1,44 +1,44 @@
-const choice = require('../modeles/choice');
+const story = require('../modeles/story');
 
-exports.getChoice = async(req, res) => {
+exports.getStory = async(req, res) => {
     try {
-        const allChoice = await choice.findAll()
-        res.status(200).json(allChoice)
+        const allStory = await story.findAll()
+        res.status(200).json(allStory)
     } catch(err) {
         res.status(500).json({ error: "Unable to connect to db"})
         console.log(err)
     }
 }
 
-exports.getChoiceById = async(req, res) => {
+exports.getStoryById = async(req, res) => {
     try {
-        const currentChoice = await choice.findByPk(req.params.id)
-        res.status(200).json(currentChoice)
+        const currentStory = await story.findByPk(req.params.id)
+        res.status(200).json(currentStory)
     } catch(err) {
         res.status(500).json({ error: "Unable to connect to db"})
         console.log(err)
     }
 }
 
-exports.deleteChoice = async(req, res) => {
+exports.deleteStory = async(req, res) => {
     try {
-        await choice.destroy({
+        await story.destroy({
             where: {id: req.params.id}
         })
-        res.status(200).json("choice has disapear")
+        res.status(200).json("story has disapear")
     } catch(err) {
         res.status(500).json({ error: "Unable to connect to db"})
         console.log(err)
     }
 }
 
-exports.updateChoice = async(req, res) => {
+exports.updateStory = async(req, res) => {
     
     try {
-        await choice.update(req.body, {
+        await story.update(req.body, {
             where: {id: req.params.id}
         })
-        res.status(200).json("choice has been updated")
+        res.status(200).json("story has been updated")
     } catch(err) {
         res.status(500).json({ error: "Unable to connect to db"})
         console.log(err)
