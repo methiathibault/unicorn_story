@@ -47,7 +47,7 @@ exports.getScenarios = async(req, res) => {
 exports.getScenarioById = async(req, res) => {
     try {
         const currentScenario = await scenario.findByPk(req.params.id)
-        res.status(200).json(currentScenario)
+        res.status(200).json([currentScenario])
     } catch(err) {
         res.status(500).json({ error: "Unable to connect to db"})
         console.log(err)
