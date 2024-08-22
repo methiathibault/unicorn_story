@@ -54,3 +54,13 @@ exports.updateChoice = async(req, res) => {
         console.log(err)
     }
 }
+
+exports.getChoiceByScenarioId = async(req,res) => {
+    try {
+        const allChoices = await choice.findAll({where:{scenarId: req.params.id}})
+        res.status(200).json(allChoices)
+    } catch(err) {
+        res.status(500).json({ error: "Unable to connect to db"})
+        console.log(err)
+    }
+}

@@ -1,17 +1,14 @@
 import React,{useState, useEffect} from 'react'
 import axios from 'axios'
-import ScenarComponent from '../components/ScenarComponent'
-import ChoiceComponent from '../components/ChoiceComponent'
 
 
 export default function StoryPage() {
-   
+
+    const[choice, setChoice] = useState([])
     const[storyId,setStoryId] = useState(1)
     const [scenario,setScenario] = useState([])
     const [currentScenario,setCurrentScenario] = useState([])
-    const [turn, setTurn] = useState(1)
     let test = []
-
     
 
     async function getScenar(){
@@ -28,6 +25,7 @@ export default function StoryPage() {
 
     function nextScenar(id){
 
+
     }
 
     async function startScenar(scene){  
@@ -41,36 +39,37 @@ export default function StoryPage() {
       })
 
     }
+  
+  
+    function getChoiceByScenarId(){
+      axios.get(`http://localhost:3000/choices/scenario/${currentScenar.id}`)
+      .then(res => setChoice(res))
+      .catch(err => console.log(err))
+  }
+  
+  useEffect(() => {
+    getChoiceByScenarId()
+    getScenar()
+  })
 
-    useEffect(()=>{
-      getScenar()
-     // startScenar(1)
-    },[])
+  function updateUnicorn(unicornId , statImpact){
+    axios.patch(`http://localhost:3000/unicorn/${unicornId}`, statImpact)
+    .then(res => console.log(res))
+    .catch(err => console.log(err))
+  }
 
   return (
     <div>
         <h1>this is a story 1</h1>  
-        <ScenarComponent />
-
-        {console.log("ble")}
-        {console.log(currentScenario)}
-
         {currentScenario.title}
         {currentScenario.description}
         {currentScenario.difficulty}
-
-        {/* {currentScenario.map((sce)=>(
-
-          <>
-
-            <div>{sce.title}</div>
-          </>
-        ))} */}
-
-        
-
-       
-       
+        <div>
+            {choice.map((choice) => (
+                <button key={choice.id}>{choice.title}</button>
+                )
+            )}
+        </div>
     </div>
   )
 }

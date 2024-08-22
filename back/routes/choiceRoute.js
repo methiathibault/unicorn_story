@@ -8,5 +8,6 @@ router.get('/choice/:id', choiceController.getChoiceById);
 router.post('/create', choiceController.createChoice);
 router.patch('/choice/:id', choiceController.deleteChoice);
 router.delete('/choice/:id', choiceController.updateChoice);
+router.get('/choices/scenario/:id', choiceController.getChoiceByScenarioId)
 
 module.exports = router
