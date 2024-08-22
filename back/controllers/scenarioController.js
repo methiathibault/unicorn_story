@@ -64,3 +64,14 @@ exports.getScenarioFromStoryId = async(req, res) => {
         console.log(err)
     }
 }
+
+exports.getFirstScenarioFromStoryId = async(req, res) => {
+    id = req.params.id
+    try {
+        const currentScenario = await scenario.findAll({where:{storyId:id,difficulty:1}})
+        res.status(200).json(currentScenario)
+    } catch(err) {
+        res.status(500).json({ error: "Unable to connect to db"})
+        console.log(err)
+    }
+}
