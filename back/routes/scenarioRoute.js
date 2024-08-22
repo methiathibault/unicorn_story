@@ -8,5 +8,6 @@ router.patch('/scenario/:id', scenarioController.updateScenario)
 router.delete('/scenario/:id', scenarioController.deleteScenario)
 router.get('/scenarios', scenarioController.getScenarios)
 router.get('/scenario/:id', scenarioController.getScenarioById)
+router.get("/scenario/story/:id", scenarioController.getScenarioFromStoryId)
 
 module.exports = router
