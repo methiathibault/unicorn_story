@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react'
+import { React, useState } from 'react'
 import axios from 'axios'
 
 export default function HomePage() {
@@ -11,12 +11,14 @@ export default function HomePage() {
     })
 
     function createUnicorn(){
-        axios.post("http://localhost:8000/api/unicorn/create", [unicorn])
+        axios.post("http://localhost:8000/api/unicorn/create", unicorn)
         .then(res => console.log(res))
         .catch(err => console.log(err))
     }
+
     return (
         <div>
+            <h2>Create your unicorn</h2>
             <input type="text" placeholder="Enter your name" onChange={(e) => setUnicorn({...unicorn, name: e.target.value})}/>
             <input type="text" placeholder="How strong your unicorn is" onChange={(e) => setUnicorn({...unicorn, strenght: e.target.value})}/>
             <input type="text" placeholder="How agile your unicorn is" onChange={(e) => setUnicorn({...unicorn, agility: e.target.value})}/>
