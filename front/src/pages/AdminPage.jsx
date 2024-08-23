@@ -13,6 +13,10 @@ export default function AdminPage() {
     const [newScenario, setNewScenario] = useState({ title: '', description: '', difficulty: 1, storyId: 1 });
     const [newChoice, setNewChoice] = useState({ title: '', consequence: '', statImpact: '', statRequirement: '', scenarId: 1, nextScenarId: 1 });
 
+    const [updateStoryModal, setUpdateStoryModal] = useState(false);
+    const [updateScenarioModal, setUpdateScenarioModal] = useState(false);
+    const [updateChoiceModal, setUpdateChoiceModal] = useState(false);
+
     const handleStoryFormSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -61,7 +65,8 @@ export default function AdminPage() {
 
     function getStories(){
         axios.get('http://localhost:8000/api/story/story')
-        .then(res => setStories(res.data))
+        .then(res => {setStories(res.data) 
+            console.log(res.data)})
         .catch(err => console.log(err))
     }
 
@@ -77,6 +82,18 @@ export default function AdminPage() {
         .catch(err => console.log(err))
     }
 
+    function deleteStory(id){
+        axios.delete('http://localhost:8000/api/story/story/'+id)
+        .then(res => setChoices(res.data))
+        .catch(err => console.log(err))
+    }
+    async function updateStory(id,title){
+        await axios.patch('http://localhost:8000/api/story/story/'+id,{"title":title})
+        .then(res => console.log(res.data))
+        .catch(err => console.log(err))
+        setRefresher(!refresher)
+    }
+
     useEffect(() => {
         getStories()
         getScenarios()
@@ -85,119 +102,166 @@ export default function AdminPage() {
     , [refresher])
 
     return (
-        <div>
-            <h1>Admin Page</h1>
+        
+        <div className='bg-gray-200 min-h-screen'>
+            <h1 className='text-6xl'>Admin Page</h1>
             <div>
                 <div>
-                    <button onClick={() => setIsModalOpen(true)}>Add New Story</button>
+                    <button onClick={() => setIsModalOpen(true)} className='border-2 bg-violet-200'>Add New Story</button>
                     {isModalOpen && (
                         <div className="modal">
                             <div className="modal-content">
-                                <span className="close" onClick={() => setIsModalOpen(false)}>&times;</span>
+                                <span className="close bg-red-500 rounded-full" onClick={() => setIsModalOpen(false)}>&times;</span>
                                 <h2>Add New Story</h2>
                                 <form onSubmit={handleStoryFormSubmit}>
                                     <label>
                                         Title:
-                                        <input type="text" name="title" value={newStory.title} onChange={handleStoryInputChange} required />
+                                        <input type="text" name="title" value={newStory.title} onChange={handleStoryInputChange} required  className='border-2'/>
                                     </label>
-                                    <button type="submit">Submit</button>
+                                    <button type="submit"  className='bg-green-400 rounded-sm'>Submit</button>
                                 </form>
                             </div>
                         </div>
                     )}
+                    <div>
+                        <button onClick={() => setUpdateStoryModal(true)} className='bg-orange-500'>
+                            update stories
+                        </button>
+                        {updateStoryModal && (
+                            <div><button onClick={()=> setUpdateStoryModal(false)} className="close bg-red-500 rounded-full">stop</button></div>
+                        )}
+                    </div>
                         <h2>Stories</h2>
                         {stories.map((story) => (
-                            <div key={story.id}>
-                                <p>{story.id}</p>
-                                <p>{story.title}</p>
+                            <div key={story.id} className='grid grid-cols-3'>
+                                <div>{story.id}</div>
+                                <div>{story.title}</div>
+                                <div>
+                                    <button onClick={() => deleteStory(story.id)} className='bg-red-500'>
+                                        Delete
+                                    </button>
+                                </div>
+                                
+                                {updateStoryModal ? 
+                                <div className='grid grid-cols-3'>
+                                    <div >
+                                        {story.id}
+                                    </div>
+
+                                    <div>
+                                        <input type="text" id={"title"+story.id} defaultValue={story.title}  required className='border-2'/>
+                                    </div>
+                                    <div>
+                                        <button type="submit" onClick={(e) => {
+                                            e.preventDefault()
+                                            let input = document.getElementById("title"+story.id).value
+                                            console.log(input);
+                                            updateStory(story.id, input)
+                                            }} className='bg-green-400 rounded-sm'>Submit</button>
+                                    </div>
+                                </div> 
+                                :
+                                 <div>No</div>}
                             </div>
-                            )
-                        )}
+                        ))}
+
                 </div>
                 <div>
-                <button onClick={() => setIsScenarioModalOpen(true)}>Add New Scenario</button>
+                <button onClick={() => setIsScenarioModalOpen(true)}  className='border-2 bg-violet-200'>Add New Scenario</button>
                 {isScenarioModalOpen && (
                     <div className="modal">
                         <div className="modal-content">
-                            <span className="close" onClick={() => setIsScenarioModalOpen(false)}>&times;</span>
+                            <span className="close bg-red-500 rounded-full" onClick={() => setIsScenarioModalOpen(false)}>&times;</span>
                             <h2>Add New Scenario</h2>
                             <form onSubmit={handleScenarioFormSubmit}>
                                 <label>
                                     Title:
-                                    <input type="text" name="title" value={newScenario.title} onChange={handleScenarioInputChange} required />
+                                    <input type="text" name="title" value={newScenario.title} onChange={handleScenarioInputChange} required className='border-2'/>
                                 </label>
                                 <label>
                                     Description:
-                                    <textarea name="description" value={newScenario.description} onChange={handleScenarioInputChange} required />
+                                    <textarea name="description" value={newScenario.description} onChange={handleScenarioInputChange} required className='border-2'/>
                                 </label>
                                 <label>
                                     Difficulty:
-                                    <input type="number" name="difficulty" value={newScenario.difficulty} onChange={handleScenarioInputChange} required />
+                                    <input type="number" name="difficulty" value={newScenario.difficulty} onChange={handleScenarioInputChange} required className='border-2'/>
                                 </label>
                                 <label>
                                     ID of the linked story:
-                                    <input type="number" name="storyId" value={newScenario.storyId} onChange={handleScenarioInputChange} required />
+                                    <input type="number" name="storyId" value={newScenario.storyId} onChange={handleScenarioInputChange} required className='border-2'/>
                                 </label>
-                                <button type="submit">Submit</button>
+                                <button type="submit" className='bg-green-400 rounded-sm'>Submit</button>
                             </form>
                         </div>
                     </div>
                 )}
+                        <button onClick={() => setUpdateScenarioModal(true)} className='bg-orange-500'>
+                            update scenario
+                        </button>
+                        {updateScenarioModal && (
+                            <div><button onClick={()=> setUpdateScenarioModal(false)} className="close bg-red-500 rounded-full">stop</button></div>
+                        )}
                     <h2>Scenarios</h2>
                     {scenarios.map((scenario) => (
-                        <div key={scenario.id}>
-                            <p>{scenario.id}</p>
-                            <p>Title: {scenario.title}</p>
-                            <p>Difficulty: {scenario.difficulty}</p>
-                            <p>Linked story: {scenario.storyId}</p>
+                        <div key={scenario.id} className='grid grid-cols-4'>
+                            <div>{scenario.id}</div>
+                            <div>Title: {scenario.title}</div>
+                            <div>Difficulty: {scenario.difficulty}</div>
+                            <div>Linked story: {scenario.storyId}</div>
                         </div>
                         )
                     )}
                 </div>
                 <div>
-                <button onClick={() => setIsChoiceModalOpen(true)}>Add New Choice</button>
+                <button onClick={() => setIsChoiceModalOpen(true)} className='border-2 bg-violet-200'>Add New Choice</button>
                 {isChoiceModalOpen && (
                     <div className="modal">
-                        <div className="modal-content">
-                            <span className="close" onClick={() => setIsChoiceModalOpen(false)}>&times;</span>
+                        <div className="modal-content flex space-y-10">
+                            <span className="close bg-red-500 rounded-full" onClick={() => setIsChoiceModalOpen(false)}> &times; </span>
                             <h2>Add New Choice</h2>
                             <form onSubmit={handleChoiceFormSubmit}>
                                 <label>
                                     Text:
-                                    <input type="text" name="text" value={newChoice.text} onChange={handleChoiceInputChange} required />
+                                    <input type="text" name="text" value={newChoice.text} onChange={handleChoiceInputChange} required className='border-2'/>
                                 </label>
                                 <label>
                                     Consequence:
-                                    <input type="text" name="consequence" value={newChoice.consequence} onChange={handleChoiceInputChange} required />
+                                    <input type="text" name="consequence" value={newChoice.consequence} onChange={handleChoiceInputChange} required className='border-2'/>
                                 </label>
                                 <label>
                                     Stat Impact:
-                                    <input type="text" name="statImpact" value={newChoice.statImpact} onChange={handleChoiceInputChange} required />
+                                    <input type="text" name="statImpact" value={newChoice.statImpact} onChange={handleChoiceInputChange} required className='border-2'/>
                                 </label>
                                 <label>
                                     Stat Requirement:
-                                    <input type="text" name="statRequirement" value={newChoice.statRequirement} onChange={handleChoiceInputChange} required />
+                                    <input type="text" name="statRequirement" value={newChoice.statRequirement} onChange={handleChoiceInputChange} required className='border-2'/>
                                 </label>
                                 <label>
                                     Scenario ID:
-                                    <input type="number" name="scenarioId" value={newChoice.scenarioId} onChange={handleChoiceInputChange} required />
+                                    <input type="number" name="scenarioId" value={newChoice.scenarioId} onChange={handleChoiceInputChange} required className='border-2'/>
                                 </label>
                                 <label>
                                     Next Scenario ID:
-                                    <input type="number" name="nextScenarioId" value={newChoice.nextScenarioId} onChange={handleChoiceInputChange} required />
+                                    <input type="number" name="nextScenarioId" value={newChoice.nextScenarioId} onChange={handleChoiceInputChange} required className='border-2'/>
                                 </label>
-                                <button type="submit">Submit</button>
+                                <button type="submit" className='bg-green-400 rounded-sm'>Submit</button>
                             </form>
                         </div>
                     </div>
                 )}
+                <button onClick={() => setUpdateChoiceModal(true)} className='bg-orange-500'>
+                            update scenario
+                        </button>
+                        {updateChoiceModal && (
+                            <div><button onClick={()=> setUpdateChoiceModal(false)} className="close bg-red-500 rounded-full">stop</button></div>
+                        )}
                 <h2>Choices</h2>
                 {choices.map((choice) => (
-                    <div key={choice.id}>
-                        <p>{choice.id}</p>
-                        <p>Text: {choice.title}</p>
-                        <p>Linked scenario: {choice.scenarId}</p>
-                        <p>Next scenario: {choice.nextScenarId}</p>
+                    <div key={choice.id} className='grid grid-cols-4'>
+                        <div>{choice.id}</div>
+                        <div>Text: {choice.title}</div>
+                        <div>Linked scenario: {choice.scenarId}</div>
+                        <div>Next scenario: {choice.nextScenarId}</div>
                     </div>
                     )
                 )}

@@ -69,24 +69,28 @@ export default function StoryPage() {
     }, [refresher])
 
     return (
-        <div>
-            <h1>this is a story 1</h1>  
-        <div>
+    <div className='flex flex-col items-center space-y-4 bg-gray-200 min-h-screen'>
+            <h1 className='text-6xl font-bold'>STORY : TITLE STORY</h1>  
+            
+        <div >
             {scenario.map((scenario) => (
-                    <div>
-                      <h1>{scenario.title}</h1>
-                      <p>{scenario.description}</p>
+                    <div className='flex flex-col items-center'>
+                      <h1 className='text-2xl font-bold '>{scenario.title}</h1>
+                      <p className=' p-8 border-2 border-black rounded-lg my-5'>{scenario.description}</p>
                     </div>
                 )
             )}
+
+            <div className='flex items-center'>
             {choice.length === 0?
-            <button onClick={()=> endStory()}>fini</button> 
-            :
-            choice.map((choice) => (
-              <button key={choice.id} onClick={() => nextScenario(choice.nextScenarId, choice.consequence, choice.statImpact)}>{choice.title}</button>
+                <button onClick={()=> endStory()} className='border-2 bg-violet-300 px-2 h-10 rounded-md'>fini</button> 
+                :
+                choice.map((choice) => (
+                <div> <button key={choice.id} onClick={() => nextScenario(choice.nextScenarId, choice.consequence)} className='border-2 bg-violet-300 px-2 h-10 rounded-full'>{choice.title}</button>  </div>
+                    )
                 )
-            )
-            }
+            } 
+            </div>
         </div>
     </div>
   )

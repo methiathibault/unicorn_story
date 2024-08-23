@@ -33,17 +33,17 @@ export default function LoginPage() {
 
     if (token === "") {
         return(
-            <div>
-                <h1>Login</h1>
+            <div className='bg-gray-200 min-h-screen flex flex-col items-center '>
+                <h1 className='text-6xl'>Login</h1>
                 <div>
                     <p>Email: </p>
-                    <input type='text' onChange={e => SetEmail(e.target.value)} />
+                    <input type='text' onChange={e => SetEmail(e.target.value)}  className='border rounded-full'/>
                 </div>
                 <div>
                     <p>Password :</p>
-                    <input type='password' onChange={e => SetPassword(e.target.value)}/>
+                    <input type='password' onChange={e => SetPassword(e.target.value)} className='border rounded-full'/>
                 </div>
-                <div><button onClick={Login}>Login</button></div>
+                <div><button onClick={Login} className='bg-green-400 rounded-full w-48 h-12 mt-6'>Login</button></div>
                 <div>{connectionStatus}</div>
             </div>
         )
