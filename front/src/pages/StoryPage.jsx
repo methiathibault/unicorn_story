@@ -16,6 +16,7 @@ export default function StoryPage() {
         if (level === 1){
             url = `http://localhost:8000/api/scenario/scenario/story/first/${storyId}`
         } else {
+            
             url = `http://localhost:8000/api/scenario/scenario/${scenario[0].id}`
         }
         await axios.get(url)
@@ -32,6 +33,7 @@ export default function StoryPage() {
         alert(consequence)
         axios.get(`http://localhost:8000/api/scenario/scenario/${scenarioId}`)
         .then(async res => {
+            //console.log(res.data)
             const resultat = statImpact === null ? null : await updateCurrentUnicorn(statImpact);
             if (resultat !== null){
                 if(resultat.data.hp === 0){
@@ -43,6 +45,8 @@ export default function StoryPage() {
                     setCurrentUnicorn(resultat.data)
                 }
                 setScenario(res.data)
+                console.log("id")
+                console.log(res.data[0].id)
                 setLevel(res.data[0].difficulty)
                 setRefresher(!refresher)
             }
@@ -70,6 +74,14 @@ export default function StoryPage() {
 
     return (
     <div className='flex flex-col items-center space-y-4 bg-gray-200 min-h-screen'>
+        <div className='flex flex-col'>
+            <div>name  {currentUnicorn.name}</div>
+            <div> point de vie {currentUnicorn.hp}</div>
+            <div>force  {currentUnicorn.strenght}</div>
+            <div>agilité {currentUnicorn.agility}</div>
+            <div>intelligence  {currentUnicorn.intelligence}</div>
+       </div>
+        {console.log(scenario)}
             <h1 className='text-6xl font-bold'>STORY : TITLE STORY</h1>  
             
         <div >
