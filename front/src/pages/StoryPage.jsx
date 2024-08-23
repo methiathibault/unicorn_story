@@ -37,19 +37,15 @@ export default function StoryPage() {
                 if(resultat.data.hp === 0){
                     DeadUnicorn()
                 }
-            }
-            else{
-                if (resultat !== null){
-                    setCurrentUnicorn(resultat.data)
-                }
+                setCurrentUnicorn(resultat.data)
+            } else if (scenarioId !== null){
                 setScenario(res.data)
                 setLevel(res.data[0].difficulty)
                 setRefresher(!refresher)
-            }
-            if (scenarioId === null && resultat.data.hp !== 0){
+            } else  {
                 endStory()
             }
-    })
+        })
         .catch(err => console.log(err))
     }
 
@@ -86,7 +82,7 @@ export default function StoryPage() {
                 <button onClick={()=> endStory()} className='border-2 bg-violet-300 px-2 h-10 rounded-md'>fini</button> 
                 :
                 choice.map((choice) => (
-                <div> <button key={choice.id} onClick={() => nextScenario(choice.nextScenarId, choice.consequence)} className='border-2 bg-violet-300 px-2 h-10 rounded-full'>{choice.title}</button>  </div>
+                <div> <button key={choice.id} onClick={() => nextScenario(choice.nextScenarId, choice.consequence, choice.statImpact)} className='border-2 bg-violet-300 px-2 h-10 rounded-full'>{choice.title}</button>  </div>
                     )
                 )
             } 

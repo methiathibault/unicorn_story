@@ -11,8 +11,8 @@ export default function Router() {
     return(
         <Routes>
             <Route path='/' element={<HomePage/>} />
-            <Route path='/story' element={<StoryPage/>} />
             <Route path='/login' element={<LoginPage/>} />
+            <Route path='/story' element={<StoryPage/>} />
             {isConnected ? <Route path='admin' element={<AdminPage/>} /> : null}
         </Routes>
     )

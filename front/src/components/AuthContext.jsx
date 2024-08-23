@@ -27,6 +27,7 @@ export function UserProvider({children}){
         Cookie.remove("token");
         setToken("")
         setIsConnected(false);
+        navigate("/")
     }
     const data = {token, tokenSetter, tokenDisconnect, verifyToken, isConnected};
     return <userContext.Provider value={data}>{children}</userContext.Provider>

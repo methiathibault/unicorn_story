@@ -6,7 +6,7 @@ const userController = require('../controllers/userController')
 
 router.get('/config', middleware.authenticate, userController.createTableUnicorn);
 router.post("/login",userController.login)
-router.post("/register",userController.register)
+router.post("/register", middleware.authenticate, userController.register)
 
 
 
