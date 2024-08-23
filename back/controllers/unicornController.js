@@ -15,7 +15,7 @@ exports.createUnicorn = async(req, res) => {
     
     if (parseInt(strenght) + parseInt(agility) + parseInt(intelligence) > 5) return res.status(401).json("Your stats must lower than 5 points")
     try {
-        await unicorn.create(
+        const newUnicorn = await unicorn.create(
             { 
                 name: name,
                 hp: hp, 
@@ -24,7 +24,7 @@ exports.createUnicorn = async(req, res) => {
                 intelligence: intelligence
             }
         )
-        res.status(200).json("Unicorn has been spawned")
+        res.status(200).json(newUnicorn)
     } catch(err) {
         res.status(500).json({ error: "Unable to connect to db"})
         console.log(err)

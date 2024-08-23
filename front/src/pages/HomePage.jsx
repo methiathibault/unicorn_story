@@ -9,10 +9,11 @@ export default function HomePage() {
         agility: 0,
         intelligence: 0
     })
+    const [currentUnicorn, setCurrentUnicorn] = useState()
 
     function createUnicorn(){
         axios.post("http://localhost:8000/api/unicorn/create", unicorn)
-        .then(res => console.log(res))
+        .then(res => setCurrentUnicorn(res.data))
         .catch(err => console.log(err))
     }
 
