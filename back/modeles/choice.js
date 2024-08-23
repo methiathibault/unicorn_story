@@ -31,11 +31,11 @@ const choice = sequelize.define("choice",{
 })
 
 
-choice.belongsTo(Scenario,{foreignKey:"nextScenarId"});
-Scenario.hasMany(choice, {foreignKey: 'nextScenarId'});
+choice.belongsTo(Scenario,{foreignKey:"nextScenarId",onDelete:"cascade"});
+Scenario.hasMany(choice, {foreignKey: 'nextScenarId',onDelete:"cascade"});
 
-choice.belongsTo(Scenario,{foreignKey:'scenarId'});
-Scenario.hasMany(choice,{foreignKey:'scenarId'});
+choice.belongsTo(Scenario,{foreignKey:'scenarId',onDelete:"cascade"});
+Scenario.hasMany(choice,{foreignKey:'scenarId',onDelete:"cascade"});
 
 
 

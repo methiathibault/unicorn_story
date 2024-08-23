@@ -13,6 +13,10 @@ export default function AdminPage() {
     const [newScenario, setNewScenario] = useState({ title: '', description: '', difficulty: 1, storyId: 1 });
     const [newChoice, setNewChoice] = useState({ title: '', consequence: '', statImpact: '', statRequirement: '', scenarId: 1, nextScenarId: 1 });
 
+    const [updateStoryModal, setUpdateStoryModal] = useState(false);
+    const [updateScenarioModal, setUpdateScenarioModal] = useState(false);
+    const [updateChoiceModal, setUpdateChoiceModal] = useState(false);
+
     const handleStoryFormSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -61,7 +65,8 @@ export default function AdminPage() {
 
     function getStories(){
         axios.get('http://localhost:8000/api/story/story')
-        .then(res => setStories(res.data))
+        .then(res => {setStories(res.data) 
+            console.log(res.data)})
         .catch(err => console.log(err))
     }
 
@@ -77,6 +82,18 @@ export default function AdminPage() {
         .catch(err => console.log(err))
     }
 
+    function deleteStory(id){
+        axios.delete('http://localhost:8000/api/story/story/'+id)
+        .then(res => setChoices(res.data))
+        .catch(err => console.log(err))
+    }
+    async function updateStory(id,title){
+        await axios.patch('http://localhost:8000/api/story/story/'+id,{"title":title})
+        .then(res => console.log(res.data))
+        .catch(err => console.log(err))
+        setRefresher(!refresher)
+    }
+
     useEffect(() => {
         getStories()
         getScenarios()
@@ -85,6 +102,7 @@ export default function AdminPage() {
     , [refresher])
 
     return (
+        
         <div className='bg-gray-200 min-h-screen'>
             <h1 className='text-6xl'>Admin Page</h1>
             <div>
@@ -100,19 +118,53 @@ export default function AdminPage() {
                                         Title:
                                         <input type="text" name="title" value={newStory.title} onChange={handleStoryInputChange} required  className='border-2'/>
                                     </label>
-                                    <button type="submit" className='bg-green-400 rounded-sm'>Submit</button>
+                                    <button type="submit"  className='bg-green-400 rounded-sm'>Submit</button>
                                 </form>
                             </div>
                         </div>
                     )}
+                    <div>
+                        <button onClick={() => setUpdateStoryModal(true)} className='bg-orange-500'>
+                            update stories
+                        </button>
+                        {updateStoryModal && (
+                            <div><button onClick={()=> setUpdateStoryModal(false)} className="close bg-red-500 rounded-full">stop</button></div>
+                        )}
+                    </div>
                         <h2>Stories</h2>
                         {stories.map((story) => (
-                            <div key={story.id} className='grid grid-cols-2'>
+                            <div key={story.id} className='grid grid-cols-3'>
                                 <div>{story.id}</div>
                                 <div>{story.title}</div>
+                                <div>
+                                    <button onClick={() => deleteStory(story.id)} className='bg-red-500'>
+                                        Delete
+                                    </button>
+                                </div>
+                                
+                                {updateStoryModal ? 
+                                <div className='grid grid-cols-3'>
+                                    <div >
+                                        {story.id}
+                                    </div>
+
+                                    <div>
+                                        <input type="text" id={"title"+story.id} defaultValue={story.title}  required className='border-2'/>
+                                    </div>
+                                    <div>
+                                        <button type="submit" onClick={(e) => {
+                                            e.preventDefault()
+                                            let input = document.getElementById("title"+story.id).value
+                                            console.log(input);
+                                            updateStory(story.id, input)
+                                            }} className='bg-green-400 rounded-sm'>Submit</button>
+                                    </div>
+                                </div> 
+                                :
+                                 <div>No</div>}
                             </div>
-                            )
-                        )}
+                        ))}
+
                 </div>
                 <div>
                 <button onClick={() => setIsScenarioModalOpen(true)}  className='border-2 bg-violet-200'>Add New Scenario</button>
@@ -143,6 +195,12 @@ export default function AdminPage() {
                         </div>
                     </div>
                 )}
+                        <button onClick={() => setUpdateScenarioModal(true)} className='bg-orange-500'>
+                            update scenario
+                        </button>
+                        {updateScenarioModal && (
+                            <div><button onClick={()=> setUpdateScenarioModal(false)} className="close bg-red-500 rounded-full">stop</button></div>
+                        )}
                     <h2>Scenarios</h2>
                     {scenarios.map((scenario) => (
                         <div key={scenario.id} className='grid grid-cols-4'>
@@ -191,6 +249,12 @@ export default function AdminPage() {
                         </div>
                     </div>
                 )}
+                <button onClick={() => setUpdateChoiceModal(true)} className='bg-orange-500'>
+                            update scenario
+                        </button>
+                        {updateChoiceModal && (
+                            <div><button onClick={()=> setUpdateChoiceModal(false)} className="close bg-red-500 rounded-full">stop</button></div>
+                        )}
                 <h2>Choices</h2>
                 {choices.map((choice) => (
                     <div key={choice.id} className='grid grid-cols-4'>
