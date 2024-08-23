@@ -1,19 +1,19 @@
 import { React, useState } from 'react'
 import axios from 'axios'
+import { useUnicornContext } from '../components/UnicornContext'
 
 export default function HomePage() {
     const [unicorn, setUnicorn] = useState({
         name: "",
         hp: 10,
-        strenght: 0,
-        agility: 0,
-        intelligence: 0
+        strenght: "",
+        agility: "",
+        intelligence: ""
     })
-    const [currentUnicorn, setCurrentUnicorn] = useState()
-
+    const { unicornSetter } = useUnicornContext()
     function createUnicorn(){
         axios.post("http://localhost:8000/api/unicorn/create", unicorn)
-        .then(res => setCurrentUnicorn(res.data))
+        .then(res => unicornSetter(res.data))
         .catch(err => console.log(err))
     }
 
