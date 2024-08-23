@@ -75,3 +75,29 @@ exports.updateUnicorn = async(req, res) => {
         console.log(err)
     }
 }
+
+exports.updateStatsUnicorn = async (req, res) => {
+    try {
+        const currentUnicorn = await unicorn.findByPk(req.params.id);
+        if (!currentUnicorn) {
+            return res.status(404).json({ error: "Unicorn not found" });
+        }
+
+        const updatedStats = {};
+        for (const key in req.body) {
+            if (currentUnicorn[key] !== undefined) {
+                updatedStats[key] = currentUnicorn[key] + req.body[key];
+            }
+        }
+
+        await unicorn.update(updatedStats, {
+            where: { id: req.params.id }
+        });
+
+        const updatedUnicorn = await unicorn.findByPk(req.params.id);
+        res.status(200).json(updatedUnicorn);
+    } catch (err) {
+        res.status(500).json({ error: "Unable to connect to db" });
+        console.log(err);
+    }
+};

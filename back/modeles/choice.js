@@ -19,11 +19,11 @@ const choice = sequelize.define("choice",{
     },
     statImpact:{
         type:DataTypes.JSON,
-        allowNull:false,
+        allowNull:true,
     },
     statRequirement:{
         type:DataTypes.JSON,
-        allowNull:false,
+        allowNull:true,
     }
 },{
     sequelize,

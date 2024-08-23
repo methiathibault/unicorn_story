@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import Cookie from 'js-cookie'
 import { useUserContext } from './AuthContext.jsx'
 
 export default function Navbar() {

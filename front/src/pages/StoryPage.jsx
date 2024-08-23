@@ -1,27 +1,25 @@
 import React,{useState, useEffect} from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-
+import { useUnicornContext } from '../components/UnicornContext'
 
 export default function StoryPage() {
-
-    const[choice, setChoice] = useState([])
-    const[storyId,setStoryId] = useState(1)
+    const [choice, setChoice] = useState([])
+    const [storyId,setStoryId] = useState(1)
     const [scenario, setScenario] = useState([])
     const [level, setLevel] = useState(1)
     const [refresher, setRefresher] = useState(false)
+    const { currentUnicorn, updateCurrentUnicorn, removeUnicorn, setCurrentUnicorn } = useUnicornContext()
 
     async function getScenario(){
-      console.log("started")
         let url = ""
-        if (level == 1){
+        if (level === 1){
             url = `http://localhost:8000/api/scenario/scenario/story/first/${storyId}`
         } else {
             url = `http://localhost:8000/api/scenario/scenario/${scenario[0].id}`
         }
         await axios.get(url)
         .then(async res => {
-            console.log(res.data)
             setScenario(res.data)
             await axios.get(`http://localhost:8000/api/choice/choices/scenario/${res.data[0].id}`)
             .then(res => setChoice(res.data))
@@ -30,36 +28,40 @@ export default function StoryPage() {
         .catch(err => console.log(err))
     }
 
-    function updateUnicorn(unicornId , statImpact){
-        axios.patch(`http://localhost:3000/unicorn/${unicornId}`, statImpact)
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
-    }
-
-    function nextScenario(scenarioId,consequence){
-
+    function nextScenario(scenarioId, consequence, statImpact){
         alert(consequence)
-        if(scenarioId === null){
-          console.log("finito")
-          endStory()
-        }
-        console.log("next")
         axios.get(`http://localhost:8000/api/scenario/scenario/${scenarioId}`)
-        .then(res => {
-            console.log(res.data)
-           //console.log(scenario)
-            setScenario(res.data)
-            setLevel(res.data[0].difficulty)
-            setRefresher(!refresher)
-        })
+        .then(async res => {
+            const resultat = statImpact === null ? null : await updateCurrentUnicorn(statImpact);
+            if (resultat !== null){
+                if(resultat.data.hp === 0){
+                    DeadUnicorn()
+                }
+            }
+            else{
+                if (resultat !== null){
+                    setCurrentUnicorn(resultat.data)
+                }
+                setScenario(res.data)
+                setLevel(res.data[0].difficulty)
+                setRefresher(!refresher)
+            }
+            if (scenarioId === null && resultat.data.hp !== 0){
+                endStory()
+            }
+    })
         .catch(err => console.log(err))
-
     }
 
     const navigate = useNavigate()
     function endStory(){
-      alert("fin de l'histoire")
-      navigate("/")
+        alert("Bravo vous avez fini l'histoire")
+        navigate("/")
+    }
+
+    function DeadUnicorn(){
+        removeUnicorn()
+        alert("Malheureusement votre licorne est morte")
     }
 
     useEffect(() => {
@@ -78,6 +80,7 @@ export default function StoryPage() {
                     </div>
                 )
             )}
+
             <div className='flex items-center'>
             {choice.length === 0?
                 <button onClick={()=> endStory()} className='border-2 bg-violet-300 px-2 h-10 rounded-md'>fini</button> 
