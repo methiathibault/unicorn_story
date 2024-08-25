@@ -54,3 +54,13 @@ exports.createStory = async(req, res) => {
         console.log(err)
     }
 }
+
+exports.countStory = async(req, res) => {
+    try {
+        const count = await story.count()
+        res.status(200).json(count)
+    } catch(err) {
+        res.status(500).json({ error: "Unable to connect to db"})
+        console.log(err)
+    }
+}

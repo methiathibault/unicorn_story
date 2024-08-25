@@ -7,9 +7,10 @@ export const UnicornContext = createContext();
 export function UnicornProvider({children}){
     const [currentUnicorn, setCurrentUnicorn] = useState();
     const navigate = useNavigate();
-    const unicornSetter = (new_unicorn) =>{
+    const unicornSetter = async (new_unicorn) =>{
         setCurrentUnicorn(new_unicorn);
-        navigate("/story")
+        const randomStoryId = await getRandomStoryId();
+        navigate(`/story/${randomStoryId}`);
     }
 
     const updateCurrentUnicorn = (statImpact) => {
@@ -20,6 +21,17 @@ export function UnicornProvider({children}){
     const removeUnicorn = () => {
         setCurrentUnicorn(null)
         navigate("/")
+    }
+
+    const countStories = async () => {
+        const res = await axios.get("http://localhost:8000/api/story/count")
+        return res.data;
+    }
+
+    const getRandomStoryId = async () => {
+        const storyCount = await countStories();
+        const randomId = Math.floor(Math.random() * storyCount) + 1;
+        return randomId;
     }
     
 

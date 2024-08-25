@@ -10,5 +10,6 @@ router.get('/story/:id', storyController.getStoryById);
 router.post('/create', middleware.authenticate, storyController.createStory);
 router.delete('/story/:id', middleware.authenticate, storyController.deleteStory);
 router.patch('/story/:id', middleware.authenticate, storyController.updateStory);
+router.get('/count', storyController.countStory);
 
 module.exports = router

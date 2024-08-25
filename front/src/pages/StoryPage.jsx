@@ -1,11 +1,12 @@
 import React,{useState, useEffect} from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useUnicornContext } from '../components/UnicornContext'
 
 export default function StoryPage() {
+    let { storyId } = useParams()
+    const [story, setStory] = useState()
     const [choice, setChoice] = useState([])
-    const [storyId,setStoryId] = useState(1)
     const [scenario, setScenario] = useState([])
     const [level, setLevel] = useState(1)
     const [refresher, setRefresher] = useState(false)
@@ -33,7 +34,6 @@ export default function StoryPage() {
         alert(consequence)
         axios.get(`http://localhost:8000/api/scenario/scenario/${scenarioId}`)
         .then(async res => {
-            //console.log(res.data)
             const resultat = statImpact === null ? null : await updateCurrentUnicorn(statImpact);
             if (resultat !== null){
                 if(resultat.data.hp === 0){
@@ -42,14 +42,18 @@ export default function StoryPage() {
                 setCurrentUnicorn(resultat.data)
             } else if (scenarioId !== null){
                 setScenario(res.data)
-                console.log("id")
-                console.log(res.data[0].id)
                 setLevel(res.data[0].difficulty)
                 setRefresher(!refresher)
             } else  {
                 endStory()
             }
         })
+        .catch(err => console.log(err))
+    }
+
+    function getStoryById(){
+        axios.get(`http://localhost:8000/api/story/story/${storyId}`)
+        .then(res => setStory(res.data))
         .catch(err => console.log(err))
     }
 
@@ -65,21 +69,20 @@ export default function StoryPage() {
     }
 
     useEffect(() => {
+        getStoryById()
         getScenario()
     }, [refresher])
 
     return (
-    <div className='flex flex-col items-center space-y-4 bg-gray-200 min-h-screen'>
-        <div className='flex flex-col'>
-            <div>name  {currentUnicorn.name}</div>
-            <div> point de vie {currentUnicorn.hp}</div>
-            <div>force  {currentUnicorn.strenght}</div>
-            <div>agilité {currentUnicorn.agility}</div>
-            <div>intelligence  {currentUnicorn.intelligence}</div>
+    <div className='relative flex flex-col items-center space-y-4 bg-gray-200 min-h-screen'>
+        <div className='absolute top-0 left-0 m-4 p-4 border-2 border-black bg-white rounded-lg'>
+            <div>name:  {currentUnicorn.name}</div>
+            <div>pv: {currentUnicorn.hp}</div>
+            <div>force:  {currentUnicorn.strenght}</div>
+            <div>agilité: {currentUnicorn.agility}</div>
+            <div>intelligence:  {currentUnicorn.intelligence}</div>
        </div>
-        {console.log(scenario)}
-            <h1 className='text-6xl font-bold'>STORY : TITLE STORY</h1>  
-            
+        {story === undefined ? <h1>loading</h1> : <h1 className='text-6xl font-bold'>{story.title}</h1>}            
         <div >
             {scenario.map((scenario) => (
                     <div className='flex flex-col items-center'>
