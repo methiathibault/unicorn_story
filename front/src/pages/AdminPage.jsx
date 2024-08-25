@@ -230,11 +230,11 @@ export default function AdminPage() {
                                 </label>
                                 <label>
                                     Stat Impact:
-                                    <input type="text" name="statImpact" value={newChoice.statImpact} onChange={handleChoiceInputChange} required className='border-2'/>
+                                    <input type="text" name="statImpact" value={newChoice.statImpact} onChange={handleChoiceInputChange}  className='border-2'/>
                                 </label>
                                 <label>
                                     Stat Requirement:
-                                    <input type="text" name="statRequirement" value={newChoice.statRequirement} onChange={handleChoiceInputChange} required className='border-2'/>
+                                    <input type="text" name="statRequirement" value={newChoice.statRequirement} onChange={handleChoiceInputChange}  className='border-2'/>
                                 </label>
                                 <label>
                                     Scenario ID:
